@@ -1,33 +1,4 @@
-# Analisar os dados de cnpjs que indicam que houve parcerias com:
-# ANALISE CNPJs DESEJADOS
-# filtrar CNPJs que tem indicios de desenvolvimento de projetos de P,D&I com:
-# - Universidades Publicas e ICT
-# variaveis da Base:
-# - [34] "Universidades"
-# - [35] "Instituições de Pesquisa"
-# - [36] "Inventor Independente Contratado"
-# - [37] "Relação dos Serviços de Terceiros - Contratados"
-# - [38] "MicroEmpresas"
-# - [39] "Empresas de Pequeno Porte"
-# - [40] "Inventor Independente Valores Transferidos"
-# CAMINHO DA BASE NA REDE DO MCTI (movido para `/data/raw/`)
-# - "P:\CGIA\OSTENSIVO\CGIT\03_COIAI\Lei do Bem\APRESENTACOES\EVENTOS\SLIDES_GRAFICOS_BRASIL\Base AB 2023.xlsx"
-
-# SETUP LIBRARY R 4.5 ----
-# use(pacote, c(fun1,fun2))
-
-
-# SETUP IMPORT BASES ----
-# install.packages("writexl")
-# install.packages("janitor")
-# install.packages(c("dplyr", "ggplot2", "readr"), repos = "https://cran-r.c3sl.ufpr.br/")
-# install.packages("tidyverse", repos = "https://cran-r.c3sl.ufpr.br/")
-library(package="dplyr")
-library(package="ggplot2")
-library(package="readr")
-library(package="readxl")
-library(package="janitor")
-
+source('', chdir = TRUE)
 # SETUP IMPORT BASE ----
 
 BASE <- readxl::read_xlsx("data/raw/Base AB 2023.xlsx", sheet="Export")
