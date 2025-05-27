@@ -12,7 +12,7 @@ options(
 
 # SETUP DIRETÓRIOS ----
 REMOTE_DIR <- "C:/Users/cesar.oliveira/github/portifolio/projetos/analisedados/captura-cnpj"
-LOCAL_DIR <- "C:/Users/cesargabriel/github/portifolio/projetos/analisedados/captura-cnpj"
+# LOCAL_DIR <- "C:/Users/cesargabriel/github/portifolio/projetos/analisedados/captura-cnpj"
 
 setwd(REMOTE_DIR)
 getwd()
