@@ -1,10 +1,8 @@
 # SETUP RENV ----
-if (!require("renv", quietly = TRUE)) {
+if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
-  renv::activate()
-} else {
-  renv::activate()
 }
+renv::activate()
 
 # SETUP PROJECT ----
 options(
@@ -22,7 +20,7 @@ getwd()
 # SETUP PACKAGES ----
 PACKAGES <- c("dplyr", "ggplot2", "readr", "readxl", "fs", "janitor", "writexl", "purrr")
 
-# Função para instalar e carregar os pacotes usando {renv}
+# Instala e carrega os pacotes usando {renv}
 for (pkg in PACKAGES) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     install.packages(pkg)
