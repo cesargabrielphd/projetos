@@ -65,7 +65,7 @@ REMOTE_DIR <- "C:/Users/cesar.oliveira/github/portifolio/projetos/analisedados/c
 LOCAL_DIR <- "C:/Users/cesargabriel/github/portifolio/projetos/analisedados/captura-cnpj"
 
 # Definindo o diretório de trabalho
-setwd(LOCAL_DIR)
+setwd(REMOTE_DIR)
 # setwd(REMOTE_DIR)
 getwd()
 
