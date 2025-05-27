@@ -1,7 +1,7 @@
-source('', chdir = TRUE)
 # SETUP IMPORT BASE ----
+use("readxl")
 
-BASE <- readxl::read_xlsx("data/raw/Base AB 2023.xlsx", sheet="Export")
+BASE <- readxl::read_xlsx("./data/processed/base_cnpjs.xlsx", sheet="Export")
 
 # verificar se Há algum NA nas colunas desejadas
 

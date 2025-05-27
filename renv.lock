@@ -4,7 +4,7 @@
     "Repositories": [
       {
         "Name": "CRAN",
-        "URL": "https://cran-r.c3sl.ufpr.br"
+        "URL": "https://vps.fmvz.usp.br/CRAN"
       }
     ]
   },
