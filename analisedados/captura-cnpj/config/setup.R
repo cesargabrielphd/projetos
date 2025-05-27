@@ -20,6 +20,39 @@
 # install.packages("languageserver")
 # - https://blog.curso-r.com/posts/2021-11-06-r-no-vscode/
 
+# SETUP RENV ----
+# Guia de uso do {renv}:
+
+# 1. Instale o {renv} globalmente (apenas uma vez):
+# Abra o R e execute:
+install.packages("renv")
+
+# 2. No seu projeto, inicialize o ambiente {renv}:
+# Isso cria uma estrutura isolada para gerenciar dependências.
+renv::init()
+
+# Ativar
+# renv::activate()
+
+# desativar
+# renv::deactivate()
+
+# 3. Instale os pacotes necessários dentro do projeto:
+# Exemplo:
+install.packages("dplyr")
+
+# O {renv} criará um arquivo renv.lock que registra as dependências do projeto.
+
+# 4. Para restaurar o ambiente em outra máquina:
+# Copie o projeto (incluindo o arquivo renv.lock) para a nova máquina.
+# Abra o R no diretório do projeto e execute:
+
+# renv::restore()
+
+# Observação:
+# Os pacotes instalados com o {renv} ficam isolados no projeto,
+# não afetando o ambiente global do R no sistema.
+
 # SETUP PROJECT ----
 options(
   stringsAsFactors = FALSE,
@@ -36,25 +69,7 @@ setwd(LOCAL_DIR)
 # setwd(REMOTE_DIR)
 getwd()
 
-# SETUP RENV ----
-if(!require(renv)) install.packages("renv")
-library(renv)
-
-# iniciando e atiavando o RENV
-Sys.setenv(
-  RENV_PATHS_ROOT = file.path(LOCAL_DIR, "renv")
-)
-
-# renv::init(bare = TRUE)
-# renv::activate()
-
-# renv::deactivate()
-
-
 # SETUP PACKAGES ----
-# instalando pacotes
-
-# .libPaths()
 
 # DEFININDO PACOTES ESSENCIAIS DA LINGUAGEM R PARA ANALISE DE DADOS
 PACKAGES <- c("dplyr", "ggplot2", "readr","readxl", "fs", "janitor", "renv", "purrr")
