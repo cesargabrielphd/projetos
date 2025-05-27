@@ -3,8 +3,9 @@
 #################### R ####################
 ###########################################
 ##### IGNORAR
-renv/
+renv/*
 **/data/raw/
 ##### NÃO IGNORAR
+!**/renv/activate.R
 !.Rprofile
 !renv.lock
