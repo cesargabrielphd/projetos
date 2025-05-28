@@ -49,11 +49,6 @@ def salvar_cnpj_no_json(path, cnpj, dados_novo):
     else:
         print(f'CNPJ {cnpj} já existe em {path}.')
 
-# IMPORTAR LISTA DE CNPJS DE: "/data/processed/CONDICAO_BASE.xlsx"
-# def read_cnpj(caminho:str=None, namecol:str=None):
-#   base = pandas.read_excel(caminho)
-#   namecol = namecol.lower().strip()
-#   return base[namecol].astype(str).tolist()
 
 def read_cnpj(caminho: str = None, namecol: str = None):
     namecol = namecol.lower().strip()
