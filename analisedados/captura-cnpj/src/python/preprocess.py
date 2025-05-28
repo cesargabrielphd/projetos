@@ -76,6 +76,6 @@ if __name__ == "__main__":
                   namefile="cnpjs_request")
       print(f"Processado {idx} de {total}.")
       if idx % 10 == 0:
-        print("Aguardando 1 minuto para evitar sobrecarga na API (processados 5 CNPJs).")
+        print("Aguardando 15 seg para evitar sobrecarga na API (processados 5 CNPJs).")
         time.sleep(15)
   print("Fim")
