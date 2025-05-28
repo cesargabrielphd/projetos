@@ -4,16 +4,27 @@ import requests
 import json
 import time
 
-def request_cnpj(url, cnpj, savein=None, namefile="cnpjs_request"):
+def request_cnpj(url, cnpj, savein=None, namefile="cnpjs_request", retries=3, delay=5):
     cnpj_nao_encontrado = []
     url_completa = url + cnpj
-    response = requests.get(url_completa)
-    if response.status_code == 200:
-        dados = response.json()
-    else:
-      cnpj_nao_encontrado = cnpj_nao_encontrado.append(cnpj)
-      print(f"{cnpj} não encontrado ou erro na requisição.")
-      return f"Lista de CNPJs NÃO ENCONTRADOS", cnpj_nao_encontrado
+
+    for attempt in range(1, retries + 1):
+        try:
+            response = requests.get(url_completa, timeout=10)
+            if response.status_code == 200:
+                dados = response.json()
+                break
+            else:
+                print(f"Tentativa {attempt}/{retries}: {cnpj} não encontrado ou erro na requisição.")
+                if attempt == retries:
+                    cnpj_nao_encontrado.append(cnpj)
+                    return f"Lista de CNPJs NÃO ENCONTRADOS", cnpj_nao_encontrado
+        except requests.exceptions.RequestException as e:
+            print(f"Tentativa {attempt}/{retries} falhou: {e}")
+            if attempt == retries:
+                cnpj_nao_encontrado.append(cnpj)
+                return f"Lista de CNPJs NÃO ENCONTRADOS", cnpj_nao_encontrado
+        time.sleep(delay)  # Aguarda antes de tentar novamente
 
     data = {
         cnpj: dados
@@ -72,9 +83,12 @@ if __name__ == "__main__":
     # Para evitar sobrecarregar a API, processaremos 5 CNPJs por vez com um intervalo de 4 minutos entre os lotes.
   total = len(LISTA_CNPJ)
   for idx, cnpj in enumerate(LISTA_CNPJ, start=1):
-      request_cnpj(url=URL, cnpj=cnpj, savein=SAVE_DADOS_IN,
-                  namefile="cnpjs_request")
-      print(f"Processado {idx} de {total}.")
+      try:
+          request_cnpj(url=URL, cnpj=cnpj, savein=SAVE_DADOS_IN,
+                      namefile="cnpjs_request")
+          print(f"Processado {idx} de {total}.")
+      except Exception as e:
+          print(f"Erro ao processar o CNPJ {cnpj}: {e}")
       if idx % 50 == 0:
         print("Aguardando 15 seg para evitar sobrecarga na API (processados 5 CNPJs).")
         time.sleep(15)
