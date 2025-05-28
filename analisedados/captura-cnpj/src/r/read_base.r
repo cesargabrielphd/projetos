@@ -22,6 +22,3 @@ BASE <-
 #  [9] "tipo_dispendio"                  "cnpj_dispendio"
 # [11] "razao_social_dispendio"          "servico"
 # [13] "valor"
-
-# SALVANDO BASE DE DADOS COM OS CNPJS QUE ATENDEM AS CONDIÇÕES
-writexl::write_xlsx(BASE, "data/processed/CONDICAO_BASE.xlsx")
