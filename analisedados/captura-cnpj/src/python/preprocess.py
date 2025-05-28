@@ -75,7 +75,7 @@ if __name__ == "__main__":
       request_cnpj(url=URL, cnpj=cnpj, savein=SAVE_DADOS_IN,
                   namefile="cnpjs_request")
       print(f"Processado {idx} de {total}.")
-      if idx % 10 == 0:
+      if idx % 50 == 0:
         print("Aguardando 15 seg para evitar sobrecarga na API (processados 5 CNPJs).")
         time.sleep(15)
   print("Fim")
