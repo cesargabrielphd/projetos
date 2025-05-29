@@ -3,12 +3,7 @@
 ###########################################
 ##### IGNORAR
 renv/*
-**/data/*
-**/data/**/*mcti*.*
-
-##### NÃO IGNORAR
-!**/data/
-!**/data/**/*.json
+**/data/
 !**/renv/activate.R
 !.Rprofile
 !renv.lock
