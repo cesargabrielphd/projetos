@@ -21,7 +21,7 @@ source("src/r/read/read_request.R")
 base_mcti_request <- dplyr::full_join(
   x = base_mcti,
   y = base_request,
-  by = "cnpj"
+  by = c("cnpj_dispendio" = "cnpj")
 )
 
 # SALVANDO BASE COMPLETA ----
