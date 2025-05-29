@@ -1,10 +1,3 @@
-# MELHORAR ESTRUTURA E DESENVOLVER ALGUMAS FUNÇÕES
-# FUNÇÕES:
-#   1. read_cnpj: ler a base e importar os cnpj, sem repetições de cnpj
-#   2. is_save: verificar se o cjp já está salvo no arquivo desejado.
-#   3. save_lista: salvar dados de cnpjs
-#   3. request_cnpj: salvar dados da API do cnpj
-
 import pandas
 import os
 import requests
