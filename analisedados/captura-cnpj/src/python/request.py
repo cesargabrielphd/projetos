@@ -81,7 +81,7 @@ def load_existing_data(filepath: str):
     return {}
 
 
-def cornull(json_data):
+def cornullfalse(json_data):
     """
     Corrige os valores 'null' em um JSON, substituindo-os por 'None'.
 
