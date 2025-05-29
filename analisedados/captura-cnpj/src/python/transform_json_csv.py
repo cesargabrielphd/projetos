@@ -93,4 +93,4 @@ df = pd.DataFrame(rows)
 print(df)
 
 # Salva o DataFrame em um arquivo CSV (opcional)
-df.to_csv("./data/processed/cnpjs_data.csv", index=False, encoding="utf-8")
+df.to_csv("./data/processed/cnpjs_data.csv", index=False, encoding="utf-8", sep=";")
