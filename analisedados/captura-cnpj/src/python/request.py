@@ -13,7 +13,6 @@ import time
 
 
 def read_cnpj(caminho: str = None, namecol: str = None, repetir: bool = False):
-    # 1. read_cnpj: ler a base e importar os cnpj, sem repetições de cnpj
     namecol = namecol.lower().strip()
     base = pandas.read_excel(caminho, dtype=str)
     for col in base.columns:
@@ -22,11 +21,12 @@ def read_cnpj(caminho: str = None, namecol: str = None, repetir: bool = False):
             return cnpjs if repetir else list(set(cnpjs))
     raise ValueError(f"Coluna '{namecol}' não encontrada no arquivo.")
 
+
 def is_save(cnpj: str, dados_existentes: dict):
-    # 2. is_save: verificar se o CNPJ já está salvo no dicionário de dados existentes.
     return cnpj in dados_existentes
 
-def request_cnpj(url, cnpj, savein=None, retries=3, delay=5):
+
+def request_cnpj(url, cnpj, retries=3, delay=5):
     cnpj_nao_encontrado = []
     url_completa = url + cnpj
 
@@ -35,33 +35,24 @@ def request_cnpj(url, cnpj, savein=None, retries=3, delay=5):
             response = requests.get(url_completa, timeout=10)
             if response.status_code == 200:
                 dados = response.json()
-                break
+                return {cnpj: dados}
             else:
-                print(
-                    f"Tentativa {attempt}/{retries}: {cnpj} não encontrado ou erro na requisição.")
-                if attempt == retries:
-                    cnpj_nao_encontrado.append(cnpj)
-                    return f"Lista de CNPJs NÃO ENCONTRADOS", cnpj_nao_encontrado
+                print(f"Tentativa {attempt}/{retries}: {cnpj} não encontrado ou erro na requisição.")
         except requests.exceptions.RequestException as e:
             print(f"Tentativa {attempt}/{retries} falhou: {e}")
-            if attempt == retries:
-                cnpj_nao_encontrado.append(cnpj)
-                return f"Lista de CNPJs NÃO ENCONTRADOS", cnpj_nao_encontrado
-        time.sleep(delay)  # Aguarda antes de tentar novamente
+        time.sleep(delay)
 
-    data = {
-        cnpj: dados
-    }
-    return data
+    cnpj_nao_encontrado.append(cnpj)
+    return {"nao_encontrados": cnpj_nao_encontrado}
 
-def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request"):
+
+def save_lista(save_in: str = None, dados: dict = None, namefile="cnpjs_request"):
     if not save_in or not dados:
         raise ValueError("Os parâmetros 'save_in' e 'dados' são obrigatórios.")
 
     os.makedirs(save_in, exist_ok=True)
     path = os.path.join(save_in, f"{namefile}.json")
 
-    # Carregar dados existentes, se o arquivo já existir
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as arquivo:
             try:
@@ -73,18 +64,14 @@ def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request"
     else:
         dados_existentes = {}
 
-    # Atualizar os dados existentes com os novos
-    for cnpj, info in dados.items():
-        if cnpj not in dados_existentes:
-            dados_existentes[cnpj] = info
+    dados_existentes.update(dados)
 
-    # Salvar os dados atualizados no arquivo
     with open(path, "w", encoding="utf-8") as arquivo:
         json.dump(dados_existentes, arquivo, ensure_ascii=False, indent=4)
     print(f"Dados salvos em {path}.")
 
+
 def load_existing_data(filepath: str):
-    # Carrega os dados existentes do arquivo JSON, se disponível
     if os.path.exists(filepath):
         with open(filepath, "r", encoding="utf-8") as arquivo:
             try:
@@ -93,23 +80,29 @@ def load_existing_data(filepath: str):
                 return {}
     return {}
 
+
 def cornull(json_data):
     """
     Corrige os valores 'null' em um JSON, substituindo-os por 'None'.
 
     Args:
-        json_data (str): String JSON contendo valores 'null'.
+        json_data (str ou dict): String JSON ou dicionário contendo valores 'null'.
 
     Returns:
         dict: Dicionário Python com os valores corrigidos.
     """
-    return json.loads(json_data.replace("null", "None"))
+    if isinstance(json_data, str):
+        json_data = json.loads(json_data)
+    if isinstance(json_data, dict):
+        return json.loads(json.dumps(json_data).replace("null", "None"))
+    raise ValueError("O parâmetro 'json_data' deve ser uma string JSON ou um dicionário.")
+
 
 if __name__ == "__main__":
     # LISTA DE CNPJs
     BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
     COLUNA_CNPJ = "CNPJ Dispêndio"
-    REPETIR_CNPJS = False  # Define se os CNPJs podem se repetir
+    REPETIR_CNPJS = False
     LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ, repetir=REPETIR_CNPJS)
     print(f"Total de CNPJs carregados: {len(LISTA_CNPJ)}")
 
@@ -128,7 +121,7 @@ if __name__ == "__main__":
         if not is_save(cnpj, cnpjs_salvos):
             print(f"Requisitando dados para o CNPJ: {cnpj}")
             dados = request_cnpj(URL, cnpj)
-            if isinstance(dados, dict):  # Verifica se a resposta é válida
+            if isinstance(dados, dict):
                 cnpjs_salvos.update(dados)
             else:
                 print(f"Erro ao requisitar dados para o CNPJ: {cnpj}")
