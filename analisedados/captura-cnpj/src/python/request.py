@@ -93,6 +93,9 @@ def load_existing_data(filepath: str):
                 return {}
     return {}
 
+def cornull():
+  return ...
+
 if __name__ == "__main__":
     # LISTA DE CNPJs
     BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"

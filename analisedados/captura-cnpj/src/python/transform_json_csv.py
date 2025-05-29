@@ -1,68 +1,81 @@
-import pandas as pd
+data = {
+    "45984013000180": {
+        "uf": "RS",
+        "cep": "91060295",
+        "qsa": [
+            {
+                "pais": null,
+                "nome_socio": "MARIA GEYSA DANTAS ROCHA",
+                "codigo_pais": null,
+                "faixa_etaria": "Entre 31 a 40 anos",
+                "cnpj_cpf_do_socio": "***539460**",
+                "qualificacao_socio": "Sócio-Administrador",
+                "codigo_faixa_etaria": 4,
+                "data_entrada_sociedade": "2022-04-11",
+                "identificador_de_socio": 2,
+                "cpf_representante_legal": "***000000**",
+                "nome_representante_legal": "",
+                "codigo_qualificacao_socio": 49,
+                "qualificacao_representante_legal": "Não informada",
+                "codigo_qualificacao_representante_legal": 0
+            }
+        ],
+        "cnpj": "45984013000180",
+        "pais": null,
+        "email": null,
+        "porte": "MICRO EMPRESA",
+        "bairro": "SAO SEBASTIAO",
+        "numero": "50",
+        "ddd_fax": "",
+        "municipio": "PORTO ALEGRE",
+        "logradouro": "FREDERICO OTAVIO DOMINGUES BARBOSA",
+        "cnae_fiscal": 7319003,
+        "codigo_pais": null,
+        "complemento": "APT 408D",
+        "codigo_porte": 1,
+        "razao_social": "MG DANTAS MARKETING LTDA",
+        "nome_fantasia": "MG DANTAS",
+        "capital_social": 2000,
+        "ddd_telefone_1": "5185192951",
+        "ddd_telefone_2": "",
+        "opcao_pelo_mei": false,
+        "codigo_municipio": 8801,
+        "cnaes_secundarios": [
+            {
+                "codigo": 8211300,
+                "descricao": "Serviços combinados de escritório e apoio administrativo"
+            },
+            {
+                "codigo": 8219999,
+                "descricao": "Preparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente"
+            }
+        ],
+        "natureza_juridica": "Sociedade Empresária Limitada",
+        "regime_tributario": null,
+        "situacao_especial": "",
+        "opcao_pelo_simples": true,
+        "situacao_cadastral": 2,
+        "data_opcao_pelo_mei": null,
+        "data_exclusao_do_mei": null,
+        "cnae_fiscal_descricao": "Marketing direto",
+        "codigo_municipio_ibge": 4314902,
+        "data_inicio_atividade": "2022-04-11",
+        "data_situacao_especial": null,
+        "data_opcao_pelo_simples": "2022-04-11",
+        "data_situacao_cadastral": "2022-04-11",
+        "nome_cidade_no_exterior": "",
+        "codigo_natureza_juridica": 2062,
+        "data_exclusao_do_simples": null,
+        "motivo_situacao_cadastral": 0,
+        "ente_federativo_responsavel": "",
+        "identificador_matriz_filial": 1,
+        "qualificacao_do_responsavel": 49,
+        "descricao_situacao_cadastral": "ATIVA",
+        "descricao_tipo_de_logradouro": "RUA",
+        "descricao_motivo_situacao_cadastral": "SEM MOTIVO",
+        "descricao_identificador_matriz_filial": "MATRIZ"
+    },
+}
 
-# Ler o JSON da base de dados
-BASE = pd.read_json("./data/processed/cnpjs_request.json")
-
-# Transformar JSON em lista de dicionários para o DataFrame
-rows = []
-for cnpj, info in BASE.items():
-    row = {
-        "CNPJ": cnpj,
-        "UF": info.get("uf"),
-        "CEP": info.get("cep"),
-        "Logradouro": info.get("logradouro"),
-        "Número": info.get("numero"),
-        "Bairro": info.get("bairro"),
-        "Município": info.get("municipio"),
-        "Porte": info.get("porte"),
-        "Razão Social": info.get("razao_social"),
-        "Nome Fantasia": info.get("nome_fantasia"),
-        "Capital Social": info.get("capital_social"),
-        "DDD Telefone 1": info.get("ddd_telefone_1"),
-        "DDD Telefone 2": info.get("ddd_telefone_2"),
-        "DDD Fax": info.get("ddd_fax"),
-        "Complemento": info.get("complemento"),
-        "CNAE Fiscal": info.get("cnae_fiscal"),
-        "CNAE Fiscal Descrição": info.get("cnae_fiscal_descricao"),
-        "CNAEs Secundários": "; ".join(
-            [f"{cnae.get('codigo', '')} - {cnae.get('descricao', '')}"
-             for cnae in info.get("cnaes_secundarios", [])]
-        ),
-        "Natureza Jurídica": info.get("natureza_juridica"),
-        "Regime Tributário": info.get("regime_tributario"),
-        "Situação Especial": info.get("situacao_especial"),
-        "Opção pelo Simples": info.get("opcao_pelo_simples"),
-        "Opção pelo MEI": info.get("opcao_pelo_mei"),
-        "Situação Cadastral": info.get("situacao_cadastral"),
-        "Data Início Atividade": info.get("data_inicio_atividade"),
-        "Data Situação Cadastral": info.get("data_situacao_cadastral"),
-        "Data Opção pelo Simples": info.get("data_opcao_pelo_simples"),
-        "Data Exclusão do Simples": info.get("data_exclusao_do_simples"),
-        "Data Situação Especial": info.get("data_situacao_especial"),
-        "Código Município IBGE": info.get("codigo_municipio_ibge"),
-        "Código Município": info.get("codigo_municipio"),
-        "Código Natureza Jurídica": info.get("codigo_natureza_juridica"),
-        "Código Porte": info.get("codigo_porte"),
-        "Motivo Situação Cadastral": info.get("motivo_situacao_cadastral"),
-        "Descrição Situação Cadastral": info.get("descricao_situacao_cadastral"),
-        "Descrição Tipo de Logradouro": info.get("descricao_tipo_de_logradouro"),
-        "Descrição Motivo Situação Cadastral": info.get("descricao_motivo_situacao_cadastral"),
-        "Descrição Identificador Matriz/Filial": info.get("descricao_identificador_matriz_filial"),
-        "Identificador Matriz/Filial": info.get("identificador_matriz_filial"),
-        "Qualificação do Responsável": info.get("qualificacao_do_responsavel"),
-        "Ente Federativo Responsável": info.get("ente_federativo_responsavel"),
-        "Nome Cidade no Exterior": info.get("nome_cidade_no_exterior"),
-        "QSA": "; ".join(
-            [f"{socio.get('nome_socio', '')} ({socio.get('qualificacao_socio', '')}, {socio.get('faixa_etaria', '')})"
-             for socio in info.get("qsa", [])]
-        )
-    }
-    rows.append(row)
-
-# Criar DataFrame
-df = pd.DataFrame(rows)
-
-# Salvar em CSV
-df.to_csv("./data/processed/cnpjs_request.csv", index=False, sep="|")
-
-print("Arquivo CSV gerado com sucesso!")
+import json
+print(data.keys())
