@@ -93,8 +93,17 @@ def load_existing_data(filepath: str):
                 return {}
     return {}
 
-def cornull():
-  return ...
+def cornull(json_data):
+    """
+    Corrige os valores 'null' em um JSON, substituindo-os por 'None'.
+
+    Args:
+        json_data (str): String JSON contendo valores 'null'.
+
+    Returns:
+        dict: Dicionário Python com os valores corrigidos.
+    """
+    return json.loads(json_data.replace("null", "None"))
 
 if __name__ == "__main__":
     # LISTA DE CNPJs
