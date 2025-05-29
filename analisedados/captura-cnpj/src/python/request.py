@@ -22,12 +22,9 @@ def read_cnpj(caminho: str = None, namecol: str = None, repetir: bool = False):
             return cnpjs if repetir else list(set(cnpjs))
     raise ValueError(f"Coluna '{namecol}' não encontrada no arquivo.")
 
-def is_save(cnpj: int, lista: list):
-    #   2. is_save: verificar se o cjp já está salvo no arquivo desejado.
-    if cnpj in lista:
-      return True
-    else:
-      return False
+def is_save(cnpj: str, dados_existentes: dict):
+    # 2. is_save: verificar se o CNPJ já está salvo no dicionário de dados existentes.
+    return cnpj in dados_existentes
 
 def request_cnpj(url, cnpj, savein=None, retries=3, delay=5):
     cnpj_nao_encontrado = []
@@ -116,7 +113,7 @@ if __name__ == "__main__":
 
     # Verificar e salvar dados
     for cnpj in LISTA_CNPJ:
-        if cnpj not in cnpjs_salvos:
+        if not is_save(cnpj, cnpjs_salvos):
             print(f"Requisitando dados para o CNPJ: {cnpj}")
             dados = request_cnpj(URL, cnpj)
             if isinstance(dados, dict):  # Verifica se a resposta é válida
