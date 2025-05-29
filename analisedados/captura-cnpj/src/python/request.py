@@ -17,6 +17,7 @@ def read_cnpj(caminho: str = None, namecol: str = None, repetir: bool = False):
     base = pandas.read_excel(caminho, dtype=str)
     for col in base.columns:
         if col.strip().lower() == namecol:
+          # TODOS OS CNPJS TEM ZEROS A ESQUERDA
             cnpjs = base[col].astype(str).str.zfill(14).tolist()
             return cnpjs if repetir else list(set(cnpjs))
     raise ValueError(f"Coluna '{namecol}' não encontrada no arquivo.")
