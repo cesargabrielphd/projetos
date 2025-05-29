@@ -1,29 +1,31 @@
 import json
+import pandas as pd
 
+# Carrega o arquivo JSON
 with open("./data/processed/cnpjs_request.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
-# Exibe as chaves principais do JSON
-print("Chaves principais:", data.keys())
+# Cria uma lista para armazenar os dados formatados
+rows = []
 
-# Exemplo de inspeção detalhada
+# Itera sobre os CNPJs e extrai as informações relevantes
 for cnpj, info in data.items():
-    print(f"CNPJ: {cnpj}")
-    print("Informações:", info)
-    break  # Remove este 'break' para exibir todas as entradas
+    rows.append({
+        "CNPJ": cnpj,
+        "UF": info.get("uf"),
+        "Porte": info.get("porte"),
+        "Capital Social": info.get("capital_social"),
+        "CNAE Fiscal": info.get("cnae_fiscal"),
+        "Descrição CNAE Fiscal": info.get("cnae_fiscal_descricao"),
+        "Natureza Jurídica": info.get("natureza_juridica"),
+        "Data Início Atividade": info.get("data_inicio_atividade"),
+    })
 
-# DADOS
-# Estado(UF): uf
-# Classificação e Porte:
-#   - Porte da Empresa: porte
-#   - Capital Social: capital_social
+# Cria o DataFrame
+df = pd.DataFrame(rows)
 
-# Atividade Econômica:
-# - CNAE Fiscal: cnae_fiscal
-# - Descrição do CNAE Fiscal: cnae_fiscal_descricao
+# Exibe o DataFrame
+print(df)
 
-# informações Adicionais:
-# - Natureza Jurídica: natureza_juridica
-# - Data de Início de Atividade: data_inicio_atividade
-
-# cnpj ; uf ; porte; capital_social; cnae_fiscal ; cnae_fiscal_descricao ; natureza_juridica ; data_inicio_atividade
+# Salva o DataFrame em um arquivo CSV (opcional)
+df.to_csv("./data/processed/cnpjs_data.csv", index=False, encoding="utf-8")
