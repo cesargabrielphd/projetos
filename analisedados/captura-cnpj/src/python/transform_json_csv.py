@@ -74,7 +74,7 @@ for cnpj, info in data.items():
                 socio.get("codigo_faixa_etaria"),
                 socio.get("faixa_etaria")
             ]
-            for socio in info.get("qsa", [])
+            for socio in (info.get("qsa") or [])  # Garante que seja uma lista ou uma lista vazia
         ],
         # Lista de listas para CNAEs Secundários
         "CNAEs Secundários": [
