@@ -12,7 +12,7 @@ import json
 import time
 
 
-def read_cnpj(caminho: str = None, namecol: str = None):
+def read_cnpj(caminho: str = None, namecol: str = None, repetir:bool=False):
   #   1. read_cnpj: ler a base e importar os cnpj, sem repetições de cnpj
     namecol = namecol.lower().strip()
     base = pandas.read_excel(caminho, dtype=str)
@@ -86,10 +86,28 @@ def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request"
     print(f"Dados salvos em {path}.")
 
 if __name__ == "__main__":
-  # LISTA DE CNPJs
-  BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
-  LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol="CNPJ Dispêndio")
+    # LISTA DE CNPJs
+    BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
+    COLUNA_CNPJ = "CNPJ Dispêndio"
+    LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ)
+    print(f"Total de CNPJs carregados: {len(LISTA_CNPJ)}")
 
-  # SETUP ....
-  URL = "https://minhareceita.org/"
-  SAVE_DADOS_IN = "./data/processed/"
+    # SETUP API
+    URL = "https://minhareceita.org/"
+    SAVE_DADOS_IN = "./data/processed/"
+    NAMEFILE = "cnpjs_request"
+
+    # Verificar e salvar dados
+    cnpjs_salvos = {}
+    for cnpj in LISTA_CNPJ:
+        if not is_save(cnpj, cnpjs_salvos):
+            print(f"Requisitando dados para o CNPJ: {cnpj}")
+            dados = request_cnpj(URL, cnpj)
+            if isinstance(dados, dict):  # Verifica se a resposta é válida
+                cnpjs_salvos.update(dados)
+            else:
+                print(f"Erro ao requisitar dados para o CNPJ: {cnpj}")
+
+    # Salvar os dados coletados
+    save_lista(save_in=SAVE_DADOS_IN, dados=cnpjs_salvos, namefile=NAMEFILE)
+    print("Processo concluído.")
