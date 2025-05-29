@@ -12,13 +12,14 @@ import json
 import time
 
 
-def read_cnpj(caminho: str = None, namecol: str = None, repetir:bool=False):
-  #   1. read_cnpj: ler a base e importar os cnpj, sem repetições de cnpj
+def read_cnpj(caminho: str = None, namecol: str = None, repetir: bool = False):
+    # 1. read_cnpj: ler a base e importar os cnpj, sem repetições de cnpj
     namecol = namecol.lower().strip()
     base = pandas.read_excel(caminho, dtype=str)
     for col in base.columns:
         if col.strip().lower() == namecol:
-            return base[col].astype(str).str.zfill(14).tolist()
+            cnpjs = base[col].astype(str).str.zfill(14).tolist()
+            return cnpjs if repetir else list(set(cnpjs))
     raise ValueError(f"Coluna '{namecol}' não encontrada no arquivo.")
 
 def is_save(cnpj: int, lista: list):
@@ -89,7 +90,8 @@ if __name__ == "__main__":
     # LISTA DE CNPJs
     BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
     COLUNA_CNPJ = "CNPJ Dispêndio"
-    LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ)
+    REPETIR_CNPJS = False  # Define se os CNPJs podem se repetir
+    LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ, repetir=REPETIR_CNPJS)
     print(f"Total de CNPJs carregados: {len(LISTA_CNPJ)}")
 
     # SETUP API
