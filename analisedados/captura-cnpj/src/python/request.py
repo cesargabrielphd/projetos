@@ -86,6 +86,16 @@ def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request"
         json.dump(dados_existentes, arquivo, ensure_ascii=False, indent=4)
     print(f"Dados salvos em {path}.")
 
+def load_existing_data(filepath: str):
+    # Carrega os dados existentes do arquivo JSON, se disponível
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as arquivo:
+            try:
+                return json.load(arquivo)
+            except json.JSONDecodeError:
+                return {}
+    return {}
+
 if __name__ == "__main__":
     # LISTA DE CNPJs
     BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
@@ -98,17 +108,23 @@ if __name__ == "__main__":
     URL = "https://minhareceita.org/"
     SAVE_DADOS_IN = "./data/processed/"
     NAMEFILE = "cnpjs_request"
+    PATH_JSON = os.path.join(SAVE_DADOS_IN, f"{NAMEFILE}.json")
+
+    # Carregar dados existentes
+    cnpjs_salvos = load_existing_data(PATH_JSON)
+    print(f"Total de CNPJs já salvos: {len(cnpjs_salvos)}")
 
     # Verificar e salvar dados
-    cnpjs_salvos = {}
     for cnpj in LISTA_CNPJ:
-        if not is_save(cnpj, cnpjs_salvos):
+        if cnpj not in cnpjs_salvos:
             print(f"Requisitando dados para o CNPJ: {cnpj}")
             dados = request_cnpj(URL, cnpj)
             if isinstance(dados, dict):  # Verifica se a resposta é válida
                 cnpjs_salvos.update(dados)
             else:
                 print(f"Erro ao requisitar dados para o CNPJ: {cnpj}")
+        else:
+            print(f"CNPJ {cnpj} já está salvo. Ignorando...")
 
     # Salvar os dados coletados
     save_lista(save_in=SAVE_DADOS_IN, dados=cnpjs_salvos, namefile=NAMEFILE)
