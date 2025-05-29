@@ -83,10 +83,10 @@ def load_existing_data(filepath: str):
 
 def cornullfalse(json_data):
     """
-    Corrige os valores 'null' em um JSON, substituindo-os por 'None'.
+    Corrige os valores 'null' e 'false' em um JSON, substituindo-os por 'None' e 'False', respectivamente.
 
     Args:
-        json_data (str ou dict): String JSON ou dicionário contendo valores 'null'.
+        json_data (str ou dict): String JSON ou dicionário contendo valores 'null' ou 'false'.
 
     Returns:
         dict: Dicionário Python com os valores corrigidos.
@@ -94,8 +94,11 @@ def cornullfalse(json_data):
     if isinstance(json_data, str):
         json_data = json.loads(json_data)
     if isinstance(json_data, dict):
-        return json.loads(json.dumps(json_data).replace("null", "None"))
-    raise ValueError("O parâmetro 'json_data' deve ser uma string JSON ou um dicionário.")
+        json_str = json.dumps(json_data)
+        json_str = json_str.replace("null", "None").replace("false", "False")
+        return json.loads(json_str)
+    raise ValueError(
+        "O parâmetro 'json_data' deve ser uma string JSON ou um dicionário.")
 
 
 if __name__ == "__main__":
