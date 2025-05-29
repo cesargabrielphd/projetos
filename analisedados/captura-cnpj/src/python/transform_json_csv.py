@@ -25,3 +25,5 @@ for cnpj, info in data.items():
 # informações Adicionais:
 # - Natureza Jurídica: natureza_juridica
 # - Data de Início de Atividade: data_inicio_atividade
+
+# cnpj ; uf ; porte; capital_social; cnae_fiscal ; cnae_fiscal_descricao ; natureza_juridica ; data_inicio_atividade
