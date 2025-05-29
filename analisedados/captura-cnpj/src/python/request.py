@@ -106,8 +106,13 @@ if __name__ == "__main__":
     BASE_CAMINHO = "./data/processed/base_cnpjs.xlsx"
     COLUNA_CNPJ = "CNPJ Dispêndio"
     REPETIR_CNPJS = False
-    LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ, repetir=REPETIR_CNPJS)
-    print(f"Total de CNPJs carregados: {len(LISTA_CNPJ)}")
+
+    try:
+        LISTA_CNPJ = read_cnpj(caminho=BASE_CAMINHO, namecol=COLUNA_CNPJ, repetir=REPETIR_CNPJS)
+        print(f"Total de CNPJs carregados: {len(LISTA_CNPJ)}")
+    except Exception as e:
+        print(f"Erro ao carregar a lista de CNPJs: {e}")
+        LISTA_CNPJ = []
 
     # SETUP API
     URL = "https://minhareceita.org/"
@@ -116,21 +121,33 @@ if __name__ == "__main__":
     PATH_JSON = os.path.join(SAVE_DADOS_IN, f"{NAMEFILE}.json")
 
     # Carregar dados existentes
-    cnpjs_salvos = load_existing_data(PATH_JSON)
-    print(f"Total de CNPJs já salvos: {len(cnpjs_salvos)}")
+    try:
+        cnpjs_salvos = load_existing_data(PATH_JSON)
+        print(f"Total de CNPJs já salvos: {len(cnpjs_salvos)}")
+    except Exception as e:
+        print(f"Erro ao carregar dados existentes: {e}")
+        cnpjs_salvos = {}
 
     # Verificar e salvar dados
     for cnpj in LISTA_CNPJ:
         if not is_save(cnpj, cnpjs_salvos):
             print(f"Requisitando dados para o CNPJ: {cnpj}")
-            dados = request_cnpj(URL, cnpj)
-            if isinstance(dados, dict):
-                cnpjs_salvos.update(dados)
-            else:
-                print(f"Erro ao requisitar dados para o CNPJ: {cnpj}")
+            try:
+                dados = request_cnpj(URL, cnpj)
+                if isinstance(dados, dict):
+                    # Corrigir valores 'null' e 'false' nos dados retornados
+                    dados_corrigidos = cornullfalse(dados)
+                    cnpjs_salvos.update(dados_corrigidos)
+                else:
+                    print(f"Erro ao requisitar dados para o CNPJ: {cnpj}")
+            except Exception as e:
+                print(f"Erro durante a requisição para o CNPJ {cnpj}: {e}")
         else:
             print(f"CNPJ {cnpj} já está salvo. Ignorando...")
 
     # Salvar os dados coletados
-    save_lista(save_in=SAVE_DADOS_IN, dados=cnpjs_salvos, namefile=NAMEFILE)
-    print("Processo concluído.")
+    try:
+        save_lista(save_in=SAVE_DADOS_IN, dados=cnpjs_salvos, namefile=NAMEFILE)
+        print("Processo concluído.")
+    except Exception as e:
+        print(f"Erro ao salvar os dados: {e}")
