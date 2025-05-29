@@ -56,13 +56,34 @@ def request_cnpj(url, cnpj, savein=None, retries=3, delay=5):
     }
     return data
 
-def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request", ):
-    if save_in:
-        os.makedirs(save_in, exist_ok=True)
-        path = os.path.join(save_in, f"{namefile}.json")
-        # salvar dados
+def save_lista(save_in: str = None, dados: list = None, namefile="cnpjs_request"):
+    if not save_in or not dados:
+        raise ValueError("Os parâmetros 'save_in' e 'dados' são obrigatórios.")
 
-    return ...
+    os.makedirs(save_in, exist_ok=True)
+    path = os.path.join(save_in, f"{namefile}.json")
+
+    # Carregar dados existentes, se o arquivo já existir
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as arquivo:
+            try:
+                dados_existentes = json.load(arquivo)
+                if not isinstance(dados_existentes, dict):
+                    dados_existentes = {}
+            except json.JSONDecodeError:
+                dados_existentes = {}
+    else:
+        dados_existentes = {}
+
+    # Atualizar os dados existentes com os novos
+    for cnpj, info in dados.items():
+        if cnpj not in dados_existentes:
+            dados_existentes[cnpj] = info
+
+    # Salvar os dados atualizados no arquivo
+    with open(path, "w", encoding="utf-8") as arquivo:
+        json.dump(dados_existentes, arquivo, ensure_ascii=False, indent=4)
+    print(f"Dados salvos em {path}.")
 
 if __name__ == "__main__":
   # LISTA DE CNPJs
