@@ -19,4 +19,4 @@ base_mcti_request <- dplyr::full_join(
   by = "cnpj"
 )
 
-view(bbase_mcti_request)
+view(base_mcti_request)
