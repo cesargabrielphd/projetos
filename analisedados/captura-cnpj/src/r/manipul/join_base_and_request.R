@@ -22,7 +22,8 @@ base_mcti_request <- dplyr::full_join(
   x = base_mcti,
   y = base_request,
   by = c("cnpj_dispendio" = "cnpj")
-)
+) |>
+  dplyr::mutate_all(as.character)
 
 # SALVANDO BASE COMPLETA ----
 write.csv(
